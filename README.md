@@ -79,6 +79,7 @@ Check only targets you are authorized to assess, and keep real target lists, inv
 
 - [Full reference](docs/REFERENCE.md): every CLI option, inventory field, output field, and request rule
 - [Assessment methodology](docs/NODE2SHELL.md): how each version is classified, with sources
+- [Exploit-specific checker repositories](docs/CHECKER_FAMILY.md): roadmap for one independent repository per exploit
 - [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md)
 
 ```sh

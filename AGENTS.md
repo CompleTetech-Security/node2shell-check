@@ -13,6 +13,7 @@ Read [README.md](README.md), [CONTRIBUTING.md](CONTRIBUTING.md), and
 - `docs/NODE2SHELL.md`: dated, source-linked classification methodology.
 - `docs/REFERENCE.md`: CLI, inventory, outputs, and network behavior.
 - `docs/example-report.html`: synthetic example; never replace with real data.
+- `docs/CHECKER_FAMILY.md`: one-repository-per-exploit roadmap for related checkers.
 - `.github/workflows/tests.yml`: Python checks on Linux and Windows.
 
 ## Implementation constraints
