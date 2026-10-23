@@ -1,0 +1,4 @@
+# Reserved example domains only. Replace with targets you are authorized to assess.
+https://example.com/
+https://example.org/
+https://example.net/

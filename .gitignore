@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+websites.txt
+runtime.json
+inventory.json
+report.html
+results.csv
+results.json
+reports/
+inventories/
+*.partial
