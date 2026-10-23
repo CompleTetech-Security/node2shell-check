@@ -5,8 +5,8 @@ Delivery policy recorded **2026-10-23** for [roadmap issue #2](https://github.co
 ## One repository per exploit
 
 Each distinct exploit or advisory receives its own standalone repository, Python
-entry point, embedded rule snapshot, tests, and documentation. This follows the
-user's explicit clarification. A product name is not permission to combine
+entry point, embedded rule snapshot, tests, and documentation. This is a
+maintainer decision. A product name is not permission to combine
 unrelated vulnerabilities into one scanner. The same exploit can affect several
 packages, products, editions, or supported version branches; those belong in the
 same checker when the advisory establishes the relationship.
@@ -43,10 +43,10 @@ not network dependencies of a scan.
 | `edge-kev-check` / #3 | A coordination issue for separate NetScaler, BeyondTrust, Ivanti and other individually verified exploits. No combined edge scanner. |
 | `node-security-posture` / #4 | Keep Node2Shell in its current repository. Give each additional verified Node.js exploit its own repository. |
 | Next.js / #5 | One repository for GHSA-673q-mjm6-r5xr. Do not invent a CVE identifier. |
-| Sharp / #6 | One repository for GHSA-wq5f-xc86-pv6w / CVE-2026-96889, with bundled and system librsvg evidence kept distinct. |
+| Sharp / #6 | One repository for GHSA-wq5f-xc86-pv6w (librsvg CVE-2026-96889), with bundled and system librsvg evidence kept distinct. |
 | Atlassian / #7 | One repository for CVE-2026-21589. The multiple affected products are branches of the same advisory, not separate exploits. |
 | Flowise / #8 | One repository for GHSA-3769-jgqc-cxm7 / CVE-2026-69254. Its two package names are assessed independently within the same exploit. |
-| Docker / #9 | One repository for CopyEscape / CVE-2026-17106. Engine, CLI and Desktop use separate component/version comparisons. |
+| Docker / #9 | One repository for CVE-2026-17106 ("CopyEscape" in the research report). Engine, client and Desktop use separate component/version comparisons. |
 | simple-git / #10 | One repository for GHSA-g4wm-2vf7-vfgr / CVE-2026-102826. Source matches remain candidate evidence without proved data flow. |
 | vm2 / #11 | One repository for GHSA-8hr7-r645-pc6w / CVE-2026-92935. Keep NodeVM configuration and untrusted-code evidence separate. |
 | OCI inventory / #12 | Deferred supporting capability. It must not require executing an image or become a mandatory checker dependency. |
