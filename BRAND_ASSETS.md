@@ -1,7 +1,7 @@
 # Brand assets
 
 CompleteTech LLC names, logos, and brand assets included in this repository,
-including `assets/logo.png`, are not licensed under the AGPL-3.0 or a commercial
+including `assets/logo.png` and the images in `docs/images/`, are not licensed under the AGPL-3.0 or a commercial
 code license.
 
 They remain trademarks, service marks, or brand assets of CompleteTech LLC and
