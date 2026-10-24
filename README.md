@@ -96,3 +96,6 @@ Dual licensed: [AGPL-3.0](LICENSE), including commercial use that meets its term
   <a href="https://complete.tech"><img src="assets/logo.png" alt="CompleteTech LLC" width="160"></a><br>
   <sub>Built by <a href="https://complete.tech">CompleteTech LLC</a> · Innovation at Every Integration</sub>
 </p>
+
+An interruption after a complete report is published preserves that report and exits 130.
+CSV rejects NUL characters before writing a report.
