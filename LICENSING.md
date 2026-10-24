@@ -1,11 +1,11 @@
 # Licensing
 
 node2shell-check uses the same licensing model as
-[CompleteTech LLC's php2shell-check](https://github.com/CompleteTech-LLC/php2shell-check):
+[CompleteTech LLC's php2shell-check](https://github.com/completetech-security/php2shell-check):
 GNU AGPL-3.0 or a separate commercial license from CompleteTech LLC.
 
 The passive-fetching, robots-policy, and report approach includes code adapted
-from [php2shell-check's wordpress_check.py](https://github.com/CompleteTech-LLC/php2shell-check/blob/main/wordpress_check.py).
+from [php2shell-check's wordpress_check.py](https://github.com/completetech-security/php2shell-check/blob/main/wordpress_check.py).
 The original CompleteTech LLC copyright and licensing notices are retained;
 Node2Shell-specific assessment, inventory handling, and protections are developed
 for this repository.

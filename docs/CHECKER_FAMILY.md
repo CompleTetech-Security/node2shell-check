@@ -1,6 +1,6 @@
 # Exploit-specific checker repositories
 
-Delivery policy recorded **2026-10-23** for [roadmap issue #2](https://github.com/CompleteTech-LLC/node2shell-check/issues/2).
+Delivery policy recorded **2026-10-23** for [roadmap issue #2](https://github.com/completetech-security/node2shell-check/issues/2).
 
 ## One repository per exploit
 
@@ -19,9 +19,9 @@ its existing CLI and schema. Its public behavior is unchanged by this roadmap.
 
 | Repository | Exploit scope | Evidence emphasis | Tracking |
 | --- | --- | --- | --- |
-| [next-cache-rce-check](https://github.com/CompleteTech-LLC/next-cache-rce-check) | GHSA-673q-mjm6-r5xr | Installed Next.js versions; separate App Router, Cache Components and typed-array source candidates | [#5](https://github.com/CompleteTech-LLC/node2shell-check/issues/5) |
-| [netscaler-cve-2026-88771-check](https://github.com/CompleteTech-LLC/netscaler-cve-2026-88771-check) | CVE-2026-88771 only | Product/edition and firmware branch; no extra feature prerequisite | [#3](https://github.com/CompleteTech-LLC/node2shell-check/issues/3) |
-| [netscaler-cve-2026-88772-check](https://github.com/CompleteTech-LLC/netscaler-cve-2026-88772-check) | CVE-2026-88772 only | Firmware plus effective DTLS configuration for each virtual server | [#3](https://github.com/CompleteTech-LLC/node2shell-check/issues/3) |
+| [next-cache-rce-check](https://github.com/completetech-security/next-cache-rce-check) | GHSA-673q-mjm6-r5xr | Installed Next.js versions; separate App Router, Cache Components and typed-array source candidates | [#5](https://github.com/completetech-security/node2shell-check/issues/5) |
+| [netscaler-cve-2026-88771-check](https://github.com/completetech-security/netscaler-cve-2026-88771-check) | CVE-2026-88771 only | Product/edition and firmware branch; no extra feature prerequisite | [#3](https://github.com/completetech-security/node2shell-check/issues/3) |
+| [netscaler-cve-2026-88772-check](https://github.com/completetech-security/netscaler-cve-2026-88772-check) | CVE-2026-88772 only | Firmware plus effective DTLS configuration for each virtual server | [#3](https://github.com/completetech-security/node2shell-check/issues/3) |
 
 Repository existence is not a release assertion. The implementation pull
 requests, their exact commit checks, and the acceptance criteria in the linked

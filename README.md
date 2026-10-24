@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/CompleteTech-LLC/node2shell-check/actions/workflows/tests.yml"><img src="https://github.com/CompleteTech-LLC/node2shell-check/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="https://github.com/completetech-security/node2shell-check/actions/workflows/tests.yml"><img src="https://github.com/completetech-security/node2shell-check/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
   <img src="https://img.shields.io/badge/python-3.10%2B-1E3A8A" alt="Python 3.10+">
   <img src="https://img.shields.io/badge/dependencies-none-067647" alt="No dependencies">
   <a href="LICENSING.md"><img src="https://img.shields.io/badge/license-AGPL--3.0%20%7C%20commercial-64748B" alt="AGPL-3.0 or commercial license"></a>
@@ -21,7 +21,7 @@
 ## Quick start
 
 ```sh
-git clone https://github.com/CompleteTech-LLC/node2shell-check.git
+git clone https://github.com/completetech-security/node2shell-check.git
 cd node2shell-check
 
 python node2shell_check.py --node-version 24.22.0                       # offline, no network calls
