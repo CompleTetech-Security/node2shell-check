@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import base64
 import csv
+import io
 import html
 import json
 import math
@@ -678,6 +679,8 @@ def positive_float(value):
 def csv_safe(value):
     if isinstance(value, list):
         value = " | ".join(value)
+    if isinstance(value, str) and "\x00" in value:
+        raise ValueError("CSV values cannot contain NUL characters")
     # Prevent spreadsheet formulas from untrusted page titles / response fields.
     if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@")):
         return "'" + value
@@ -820,7 +823,9 @@ def write_report(output, rows, *, format="csv", logo=DEFAULT_LOGO, brand="Comple
 def save_report(path, rows, *, force=False, **options):
     """Publish a complete file atomically, refusing an existing path by default."""
     if path is None:
-        write_report(sys.stdout, rows, **options)
+        rendered = io.StringIO(newline="")
+        write_report(rendered, rows, **options)
+        sys.stdout.write(rendered.getvalue())
         return
     path = Path(path)
     temporary = None
@@ -910,7 +915,10 @@ def main(argv=None) -> int:
         print("Interrupted; preserving completed results.", file=sys.stderr)
     try:
         save_report(args.output, rows, force=args.force, format=args.format, logo=logo, brand=args.brand, complete=complete)
-    except (OSError, ValueError) as exc:
+    except KeyboardInterrupt:
+        print("Interrupted while writing the report; output may be incomplete.", file=sys.stderr)
+        return 130
+    except (OSError, ValueError, csv.Error) as exc:
         print(f"Cannot write report: {exc}", file=sys.stderr)
         return 2
     if not complete:
