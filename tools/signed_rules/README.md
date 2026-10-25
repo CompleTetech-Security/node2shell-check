@@ -47,7 +47,8 @@ No claims about a universal advisory schema are made: the subsequent reviewer
 must validate the target against its particular checker's schema and primary
 sources. A signed arbitrary JSON object is not an accepted detection rule.
 
-All files read are limited to four MiB, root rotations to 32, and delegation
+All files read are limited to four MiB, new root rotations to 32 per invocation (in addition to authenticated cached
+history replay), and delegation
 traversal to zero. Bundle fetches use a local-only custom FetcherInterface; the
 normal python-tuf HTTP fetcher, proxy behavior and retries are never used.
 Symbolic links and path traversal in selected bundle paths are rejected. The
@@ -91,3 +92,9 @@ root rotation, untrusted root/release keys, protected outputs and lock ownership
 They use synthetic data and prohibit socket creation. Production trust provisioning
 and an authenticated hosted feed are operational work, not claimed delivered by
 these fixtures.
+
+Cached roots are replayed cryptographically from the original bootstrap on every
+invocation. Their count is added to the new-rotation budget so routine root
+rotations do not exhaust a lifetime limit. History is bounded to 4,096 regular
+root files and 64 MiB; reaching that operational cap requires a publisher-planned
+checkpoint/reprovisioning release, never bypassing verification or deleting cache.

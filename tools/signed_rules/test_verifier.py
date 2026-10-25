@@ -156,6 +156,20 @@ class BundleTests(unittest.TestCase):
         (self.bundle/"metadata"/"2.root.json").write_bytes(rotated.to_bytes())
         self.verify(force=True)
 
+    def test_cached_history_does_not_consume_new_rotation_budget(self):
+        def roots(first, last):
+            for version in range(first,last+1):
+                md=Metadata.from_bytes(self.root.to_bytes())
+                md.signed.version=version
+                md.sign(self.keys["root"])
+                (self.bundle/"metadata"/(str(version)+".root.json")).write_bytes(md.to_bytes())
+        roots(2,20)
+        self.verify()
+        roots(21,40)
+        self.verify(force=True)
+        md=Metadata.from_bytes((self.state/"metadata"/"root.json").read_bytes())
+        self.assertEqual(40,md.signed.version)
+
     def test_stale_snapshot_and_malformed_json_retain_verified_output(self):
         self.publish(2)
         self.verify()

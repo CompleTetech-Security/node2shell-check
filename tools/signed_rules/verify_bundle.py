@@ -111,6 +111,15 @@ def verify(bundle, root, state, output, target, force=False):
         history = cache / 'root_history'
         if history.is_symlink() or (history.exists() and any(p.is_symlink() for p in history.iterdir())):
             raise ValueError('Root history links rejected')
+        history_count, history_bytes = 0, 0
+        if history.exists():
+            for entry in history.iterdir():
+                if not re.fullmatch(r'[1-9][0-9]*\.root\.json', entry.name) or not entry.is_file():
+                    raise ValueError('Unexpected root history entry')
+                history_count += 1
+                history_bytes += entry.stat().st_size
+                if history_count > 4096 or history_bytes > 64 * 1024**2:
+                    raise ValueError('Root history exceeds bounded replay limits')
         for entry in cache.iterdir():
             if entry.is_symlink():
                 # python-tuf itself maintains this one relative convenience link.
@@ -118,7 +127,7 @@ def verify(bundle, root, state, output, target, force=False):
                     raise ValueError('Unexpected metadata cache link')
         updater = Updater(str(cache), BASE + 'metadata/',
                           fetcher=BundleFetcher(), bootstrap=bootstrap,
-                          config=UpdaterConfig(max_root_rotations=32, max_delegations=0,
+                          config=UpdaterConfig(max_root_rotations=history_count + 32, max_delegations=0,
                                                root_max_length=MAX_BYTES,
                                                timestamp_max_length=MAX_BYTES,
                                                snapshot_max_length=MAX_BYTES,
