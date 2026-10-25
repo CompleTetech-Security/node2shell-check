@@ -2,6 +2,10 @@
 
 Delivery policy recorded **2026-10-23** for [roadmap issue #2](https://github.com/completetech-security/node2shell-check/issues/2).
 
+For the dated delivery audit, exact default-branch commits and CI receipts, see
+[checker delivery status](CHECKER_STATUS.md). The original first-delivery notes
+below describe scope, not the current merge state.
+
 ## One repository per exploit
 
 Each distinct exploit or advisory receives its own standalone repository, Python
