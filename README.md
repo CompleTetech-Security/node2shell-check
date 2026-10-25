@@ -100,3 +100,7 @@ Dual licensed: [AGPL-3.0](LICENSE), including commercial use that meets its term
 
 An interruption after a complete report is published preserves that report and exits 130.
 CSV rejects NUL characters before writing a report.
+
+Optional release tooling: [offline TUF bundle verification](tools/signed_rules/README.md)
+uses separate optional dependencies and an explicitly provisioned public trust root.
+It never changes the standalone checker or automatically applies a rule update.
