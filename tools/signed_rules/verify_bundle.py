@@ -127,7 +127,7 @@ def verify(bundle, root, state, output, target, force=False):
                     raise ValueError('Unexpected metadata cache link')
         updater = Updater(str(cache), BASE + 'metadata/',
                           fetcher=BundleFetcher(), bootstrap=bootstrap,
-                          config=UpdaterConfig(max_root_rotations=history_count + 32, max_delegations=0,
+                          config=UpdaterConfig(max_root_rotations=max(0, history_count - 1) + 32, max_delegations=0,
                                                root_max_length=MAX_BYTES,
                                                timestamp_max_length=MAX_BYTES,
                                                snapshot_max_length=MAX_BYTES,
