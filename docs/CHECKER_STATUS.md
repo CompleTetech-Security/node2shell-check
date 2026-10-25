@@ -4,7 +4,39 @@ Audit date: **2026-10-25**. This is a delivery snapshot, not an assessment of an
 runtime, customer, website or production deployment. Recheck GitHub before using
 these commits as current-state evidence.
 
-## What was verified
+## Continued delivery after the initial audit
+
+The baseline below is historical evidence from before the implementation work;
+its statements about absent adapters/repositories are superseded by this section.
+The initial 48-repository inventory is preserved rather than rewritten as a live
+claim. New OCI inventory and report bridge repositories are optional support.
+
+- vm2 source inspection and simple-git dependency/source adapters are merged;
+  subsequent Copilot-reviewed line-ending/arrow-regex corrections are merged at
+  vm2 `57c2448c32d82894d3ddd1af1b184436d97ddf3e` and simple-git
+  `38d2ae97b73d00992c979ba92800434e3f4cb3bd`. Hosted merge-commit checks passed.
+- Sharp's package/SBOM/ELF/source adapters are merged in [PR #10](https://github.com/CompleTetech-Security/sharp-rsvg-rce-check/pull/10)
+  at `7da460876c45a5304041ca20ef1b540021c0d06e`; [all six merge-commit jobs passed](https://github.com/CompleTetech-Security/sharp-rsvg-rce-check/actions/runs/40244824335).
+  A namespaced-SBOM identity follow-up is [PR #11](https://github.com/CompleTetech-Security/sharp-rsvg-rce-check/pull/11), still under review.
+- CopyEscape workflow/export adapters, OCI archive/SBOM inventory, SARIF/NDJSON
+  conversion, Atlassian version-file/confidence and Flowise deployment grouping
+  are implemented in separate open PRs; tests and Copilot remediation continue.
+- [Optional TUF verification PR #21](https://github.com/CompleTetech-Security/node2shell-check/pull/21)
+  tests synthetic publisher trust, expiration, rotation and rollback separately
+  from the checker. No production trust root, hosted feed or automatic rule
+  application is provisioned. Production publisher custody remains outstanding.
+- [Node metadata PR #22](https://github.com/CompleTetech-Security/node2shell-check/pull/22)
+  adds optional builtin capability and npm declaration context without changing
+  the legacy collector or treating API availability as an advisory precondition.
+- The [Node advisory matrix](NODE_ADVISORY_MATRIX.md) maps all 21 named July/October
+  CVEs. The [edge matrix](EDGE_ADVISORY_MATRIX.md) reconciles all 17 actual CSV and
+  configuration paths and links 15 separate dated-KEV metadata PRs under review.
+
+A requested Copilot review is not a completed review. Local tests, hosted tests,
+Copilot findings, merge state and production trust are tracked separately. Open
+issues are closed only after their implemented scope is reviewed and merged.
+
+## Initial audit: what was verified
 
 All 48 repositories visible in the `completetech-security` organization were
 inventoried through authenticated GitHub metadata. Each had a successful hosted
@@ -18,7 +50,7 @@ ran 53 with one skip; Flowise ran 65 with two skips. Those two family checkers
 were checked out separately at the commits listed below. Other family test
 suites were not rerun locally during this audit. Tests used synthetic inputs.
 
-## Original issue disposition
+## Initial audit: original issue disposition
 
 Completed implementation work is distinguished from the broader original scope.
 The issue bodies retain their historical requirements and dated delivery notes.

@@ -5,6 +5,8 @@ Delivery policy recorded **2026-10-23** for [roadmap issue #2](https://github.co
 For the dated delivery audit, exact default-branch commits and CI receipts, see
 [checker delivery status](CHECKER_STATUS.md). The original first-delivery notes
 below describe scope, not the current merge state.
+The [named Node advisory matrix](NODE_ADVISORY_MATRIX.md) maps the July/October
+CVE headings to the existing standalone repositories and pinned snapshots.
 
 ## One repository per exploit
 
@@ -107,3 +109,6 @@ only. No test executes target application code or sends an exploit payload.
 Local checks and hosted CI are separate evidence. Record the actual published
 commit tested; a green check on an earlier revision does not validate a later
 change. Report any remaining scope explicitly, and leave its tracking issue open.
+
+The [edge advisory ingestion/threat matrix](EDGE_ADVISORY_MATRIX.md) records
+actual CSV/configuration coverage and dated external KEV provenance.
