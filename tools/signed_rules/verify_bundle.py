@@ -106,8 +106,16 @@ def verify(bundle, root, state, output, target, force=False):
             atomic_write(marker, anchor)
         cache = state / 'metadata'
         cache.mkdir(exist_ok=True)
-        if cache.is_symlink() or any(p.is_symlink() for p in cache.iterdir()):
-            raise ValueError('Metadata cache links are not accepted')
+        if cache.is_symlink():
+            raise ValueError('Metadata cache directory link rejected')
+        history = cache / 'root_history'
+        if history.is_symlink() or (history.exists() and any(p.is_symlink() for p in history.iterdir())):
+            raise ValueError('Root history links rejected')
+        for entry in cache.iterdir():
+            if entry.is_symlink():
+                # python-tuf itself maintains this one relative convenience link.
+                if entry.name != 'root.json' or not re.fullmatch(r'root_history[/\\][1-9][0-9]*\.root\.json', os.readlink(entry)):
+                    raise ValueError('Unexpected metadata cache link')
         updater = Updater(str(cache), BASE + 'metadata/',
                           fetcher=BundleFetcher(), bootstrap=bootstrap,
                           config=UpdaterConfig(max_root_rotations=32, max_delegations=0,

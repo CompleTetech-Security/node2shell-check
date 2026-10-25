@@ -50,7 +50,9 @@ sources. A signed arbitrary JSON object is not an accepted detection rule.
 All files read are limited to four MiB, root rotations to 32, and delegation
 traversal to zero. Bundle fetches use a local-only custom FetcherInterface; the
 normal python-tuf HTTP fetcher, proxy behavior and retries are never used.
-Symbolic links and path traversal in selected bundle paths are rejected. Keep
+Symbolic links and path traversal in selected bundle paths are rejected. The
+cache permits only python-tuf's own relative `root.json` convenience link into
+its non-symlink `root_history/`; other cache links are rejected. Keep
 bundle, root, state and output under directories controlled by the invoking user;
 this is not a hostile concurrent filesystem sandbox.
 
