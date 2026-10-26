@@ -204,7 +204,7 @@ are repository build/test evidence only. No live targets were scanned.
 
 ## Future delivery procedure
 
-Implement future parsers in its exploit-specific destination, preserving
+Implement each future parser in its exploit-specific destination, preserving
 its existing result semantics, input bounds, standalone distribution and
 publication protections. Original issues remain the acceptance authority.
 Update the parent only after destination changes, meaningful synthetic tests,

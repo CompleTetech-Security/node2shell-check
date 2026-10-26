@@ -11,9 +11,13 @@ as incomplete fixes are not silently treated as separate new July/October entrie
 The table records the **existing embedded snapshots**, not new thresholds or
 independently verified deployments. Each pinned snapshot contains the exact
 preconditions, lifecycle/branch exclusions, sources, caveats and its earlier
-verification date. Each destination's audited default-branch commit passed hosted
-CI; receipts are in [CHECKER_STATUS.md](CHECKER_STATUS.md). No runtime, website or
-production deployment was assessed for this matrix.
+verification date. The 20 additional Node checkers' audited default-branch CI
+receipts are in the historical initial-audit table in
+[CHECKER_STATUS.md](CHECKER_STATUS.md#exact-hosted-receipts). Those audited CI
+revisions are distinct from the older pinned snapshot revisions below; this
+matrix does not claim a CI run on each snapshot commit. The newer Node2Shell
+and OCI delivery receipts are in its current merge-commit table. No runtime,
+website or production deployment was assessed for this matrix.
 
 | CVE / checker | Reported fixes by covered major | Pinned evidence contract and preconditions |
 | --- | --- | --- |

@@ -6,7 +6,7 @@ per-device rule evidence; flag names vary below. No combined edge scanner is
 introduced. The first two NetScaler checkers already carry separately dated
 CISA-ADP KEV and vendor exploitation metadata. The remaining explicit KEV-field
 updates are merged in separate Copilot-reviewed PRs. All actual merge-commit
-CI jobs passed; [delivery receipts](CHECKER_STATUS.md#actual-merge-commit-ci-receipts)
+CI jobs for those 15 updated checkers passed; [delivery receipts](CHECKER_STATUS.md#actual-merge-commit-ci-receipts)
 record their exact commits.
 
 CISA's official [kev-data mirror](https://github.com/cisagov/kev-data) confirms
@@ -46,7 +46,9 @@ remain uncertain under each checker's rules. Missing versions normally remain
 unknown. One explicit exception is BeyondTrust's operator-declared SaaS deployment
 with `custom_build=false`: its pinned checker can report `fixed_version_reported`
 without a version, using `operator_unverified` confidence. This is an unverified
-provider-managed deployment claim, not patch attestation or a safety guarantee. Optional network mode is omitted because passive
+provider-managed deployment claim, not patch attestation or a safety guarantee.
+
+Optional network mode is omitted because passive
 responses cannot establish firmware patch/configuration state; no network mode
 is needed to satisfy this offline delivery.
 
