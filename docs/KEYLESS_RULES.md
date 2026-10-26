@@ -38,7 +38,8 @@ reviewed workflow and the trusted local GitHub CLI.
 
 An authorized maintainer explicitly dispatches **Publish authenticated rule
 snapshot** on `main`. The job runs local-only tests, packages the existing
-embedded snapshot, attests those exact bytes and creates a new release with
+embedded snapshot, attests those exact bytes, verifies them with independently
+obtained Sigstore roots using the client policy, and creates a new release with
 `node2shell-rules.json` and `node2shell-rules.sigstore.json`. Tags have the form
 `rules-v1-RUN_NUMBER-ATTEMPT`; no existing release/asset is overwritten and no
 unrelated software release is marked latest. There is no recurring schedule.

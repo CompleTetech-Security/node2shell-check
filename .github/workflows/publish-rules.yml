@@ -43,6 +43,12 @@ jobs:
         with:
           subject-path: dist/node2shell-rules.json
           create-storage-record: false
+      - name: Independently verify the attested publication
+        env:
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          gh attestation trusted-root > "$RUNNER_TEMP/sigstore-roots.jsonl"
+          python tools/signed_rules/keyless_rules.py verify --artifact dist/node2shell-rules.json --bundle "$BUNDLE_PATH" --trusted-root "$RUNNER_TEMP/sigstore-roots.jsonl" --state "$RUNNER_TEMP/rule-state.json" --output "$RUNNER_TEMP/rule-review.json"
       - name: Publish immutable-named release assets
         env:
           GH_TOKEN: ${{ github.token }}
