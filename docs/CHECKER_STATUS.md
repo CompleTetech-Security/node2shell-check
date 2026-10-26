@@ -4,7 +4,108 @@ Audit date: **2026-10-25**. This is a delivery snapshot, not an assessment of an
 runtime, customer, website or production deployment. Recheck GitHub before using
 these commits as current-state evidence.
 
-## What was verified
+## Continued delivery after the initial audit
+
+Delivery receipt updated **2026-10-26 UTC** (October 25 in America/New_York).
+The initial 48-repository audit below is historical. Its missing-adapter and
+missing-repository statements are superseded by this delivery section. Two new
+optional support repositories bring the current family inventory to 50.
+
+Implemented and merged with GitHub Copilot review and passing hosted checks:
+
+- All 17 edge checkers' actual CSV/configuration paths are reconciled in the
+  [edge matrix](EDGE_ADVISORY_MATRIX.md). Fifteen separate metadata PRs add dated
+  KEV fields; the two initial NetScaler tools already had dated threat metadata.
+  The full pinned CISA catalog digest, CVE presence/absence and listing dates
+  were checked independently. No threshold changes or target scans were made.
+- The [Node matrix](NODE_ADVISORY_MATRIX.md) maps all 21 named July/October CVEs
+  to separate checkers. [Optional Node metadata](NODE_METADATA.md) reports
+  builtin capability shape and npm engine declarations; neither establishes
+  application use, reachability, installed runtime identity or advisory exposure.
+- Sharp adds npm/SBOM metadata, bounded ELF observations and lexical SVG/source
+  mitigation candidates. Namespaced SBOM packages cannot impersonate unscoped
+  packages. vm2 and simple-git add bounded dependency/source candidates, with
+  line-ending and arrow-regex corrections. These are syntax hints, not taint
+  analysis or proof of runtime behavior.
+- CopyEscape adds Docker export observations and bounded shell/YAML copy-command
+  candidates. Unsupported syntax emits unresolved coverage. Export input-slot
+  identities do not encode absolute paths; argument order matters for comparison.
+- Atlassian adds explicit local version files, evidence confidence and input
+  ordinals. Files are independent observations; conflicts within a file remain
+  unknown. Flowise adds allowlisted deployment/owner/package metadata and
+  independent instance grouping. Unverified deployment exports remain unknown,
+  including affected-range versions; `--fail-on-finding` does not flag unknowns.
+- [OCI inventory](https://github.com/CompleTetech-Security/oci-runtime-inventory)
+  parses bounded local archives/SBOMs without extraction or execution, preserving
+  provenance and incomplete coverage. Its consumer profiles use actual checker
+  input contracts and retain unverified build provenance. Docker config identity
+  does not authenticate supplied layers or attest a running image.
+- [Result bridge](https://github.com/CompleTetech-Security/scan-results-bridge)
+  converts explicit versioned canonical/legacy reports to SARIF/NDJSON, retaining
+  unknown/not_tested, completion, conflicts and observation counts. Relative
+  source paths require opt-in; privacy hashes remain linkable and guessable.
+- [Optional offline TUF verification](../tools/signed_rules/README.md) is merged
+  in [PR #21](https://github.com/CompleTetech-Security/node2shell-check/pull/21).
+  Real synthetic signatures test expiry, rotation/revocation, rollback and
+  protected output separately from the standalone core. This authenticates a
+  local artifact for subsequent review/release preparation; it does not install
+  rules automatically or provision a hosted feed.
+
+**Remaining:** [#13](https://github.com/CompleTetech-Security/node2shell-check/issues/13)
+requires production publisher custody, an independently distributed public trust
+root and an authenticated release/feed channel with recovery ownership. The
+recommendation is an offline Ed25519 2-of-3 root with separate release-role keys.
+No production keys or feed are provisioned. Keep the parent #2 open for that work.
+Other child implementation scopes are fulfilled by the merged work and matrices;
+this documentation does not assert production deployment or assessment.
+
+Local suites on the final implementations: Node2Shell/metadata 65, optional TUF
+13, Sharp 73, vm2 31, simple-git 32, CopyEscape 78, Atlassian 58, Flowise 70,
+OCI 19 and bridge 13. Platform skips are reported by each suite. The two initial
+NetScaler suites also pass locally (52 and 64). All 15 KEV-update suites passed
+locally with 40–72 cases each. Bridge output passed five variants against the
+vendored official OASIS SARIF schema. No real targets were assessed.
+
+Copilot's hosted findings and independent CLI reviews informed fixes. The hosted
+review quota was exhausted during final revisions; completed Copilot CLI reviews
+provided the remaining review receipts. Review scope is recorded in each PR;
+reviewers did not execute tests. Local checks, exact-head hosted checks, actual
+merge-commit checks and production trust are separate evidence.
+
+### Actual merge-commit CI receipts
+
+Every job below completed successfully on the listed default-branch commit,
+not only on its pre-merge PR head. Node2Shell has six core and six optional TUF
+jobs; each other listed repository has six Linux/Windows/macOS jobs.
+
+| Repository | Default-branch delivery commit | Hosted merge-commit checks |
+| --- | --- | --- |
+| [atlassian-cve-2026-21589-check](https://github.com/CompleTetech-Security/atlassian-cve-2026-21589-check) | [`d729faa6d81f1e010f739d61aa6fb5355f7517f9`](https://github.com/CompleTetech-Security/atlassian-cve-2026-21589-check/commit/d729faa6d81f1e010f739d61aa6fb5355f7517f9) | [6 passed](https://github.com/CompleTetech-Security/atlassian-cve-2026-21589-check/actions/runs/40250003806) |
+| [beyondtrust-remote-support-cve-2026-102764-check](https://github.com/CompleTetech-Security/beyondtrust-remote-support-cve-2026-102764-check) | [`221fbffbbd4347cade806f9f70a2253303f016ff`](https://github.com/CompleTetech-Security/beyondtrust-remote-support-cve-2026-102764-check/commit/221fbffbbd4347cade806f9f70a2253303f016ff) | [6 passed](https://github.com/CompleTetech-Security/beyondtrust-remote-support-cve-2026-102764-check/actions/runs/40249630072) |
+| [copyescape-check](https://github.com/CompleTetech-Security/copyescape-check) | [`2b73e559dcc0ab5a4183008410c4eb9fd78715ab`](https://github.com/CompleTetech-Security/copyescape-check/commit/2b73e559dcc0ab5a4183008410c4eb9fd78715ab) | [6 passed](https://github.com/CompleTetech-Security/copyescape-check/actions/runs/40250065787) |
+| [flowise-cve-2026-69254-check](https://github.com/CompleTetech-Security/flowise-cve-2026-69254-check) | [`4cbf661bcb148cf132b4cd38635f2bd453da2961`](https://github.com/CompleTetech-Security/flowise-cve-2026-69254-check/commit/4cbf661bcb148cf132b4cd38635f2bd453da2961) | [6 passed](https://github.com/CompleTetech-Security/flowise-cve-2026-69254-check/actions/runs/40250011163) |
+| [fortimail-cve-2026-104286-check](https://github.com/CompleTetech-Security/fortimail-cve-2026-104286-check) | [`9cdca2e3851d89502bdc30b7ae53b9ac0622a91c`](https://github.com/CompleTetech-Security/fortimail-cve-2026-104286-check/commit/9cdca2e3851d89502bdc30b7ae53b9ac0622a91c) | [6 passed](https://github.com/CompleTetech-Security/fortimail-cve-2026-104286-check/actions/runs/40249104350) |
+| [ivanti-connect-secure-cve-2026-104935-check](https://github.com/CompleTetech-Security/ivanti-connect-secure-cve-2026-104935-check) | [`810cd49573a6ef73b76bca28b9f62993549539c6`](https://github.com/CompleTetech-Security/ivanti-connect-secure-cve-2026-104935-check/commit/810cd49573a6ef73b76bca28b9f62993549539c6) | [6 passed](https://github.com/CompleTetech-Security/ivanti-connect-secure-cve-2026-104935-check/actions/runs/40249640225) |
+| [netscaler-cve-2026-19489-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-19489-check) | [`e74795c6d4d113f5e0d60aad318b73f3562997e7`](https://github.com/CompleTetech-Security/netscaler-cve-2026-19489-check/commit/e74795c6d4d113f5e0d60aad318b73f3562997e7) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-19489-check/actions/runs/40249092298) |
+| [netscaler-cve-2026-19490-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-19490-check) | [`31f088d1d14ee5527b1401931f64025178b5f4c2`](https://github.com/CompleTetech-Security/netscaler-cve-2026-19490-check/commit/31f088d1d14ee5527b1401931f64025178b5f4c2) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-19490-check/actions/runs/40249635376) |
+| [netscaler-cve-2026-88773-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-88773-check) | [`08d1907c825cbdb8eb98538444e56b41264aef91`](https://github.com/CompleTetech-Security/netscaler-cve-2026-88773-check/commit/08d1907c825cbdb8eb98538444e56b41264aef91) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-88773-check/actions/runs/40249086762) |
+| [netscaler-cve-2026-88774-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-88774-check) | [`36e3f129f33153d241830be42e3f0b40a8140c92`](https://github.com/CompleTetech-Security/netscaler-cve-2026-88774-check/commit/36e3f129f33153d241830be42e3f0b40a8140c92) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-88774-check/actions/runs/40249081563) |
+| [netscaler-cve-2026-88775-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-88775-check) | [`77404ae39999875528c478b6cb69c6f5b2dfb355`](https://github.com/CompleTetech-Security/netscaler-cve-2026-88775-check/commit/77404ae39999875528c478b6cb69c6f5b2dfb355) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-88775-check/actions/runs/40249076566) |
+| [netscaler-cve-2026-88776-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-88776-check) | [`bd2c814e372178c6b36ea913427e0c270a0ae33b`](https://github.com/CompleTetech-Security/netscaler-cve-2026-88776-check/commit/bd2c814e372178c6b36ea913427e0c270a0ae33b) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-88776-check/actions/runs/40249070881) |
+| [netscaler-cve-2026-88777-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-88777-check) | [`7ed1bec538682daf14468fead12e6e4f43b93780`](https://github.com/CompleTetech-Security/netscaler-cve-2026-88777-check/commit/7ed1bec538682daf14468fead12e6e4f43b93780) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-88777-check/actions/runs/40249065579) |
+| [netscaler-cve-2026-88778-check](https://github.com/CompleTetech-Security/netscaler-cve-2026-88778-check) | [`a4a5123c137c09b48c599a98857a47a1bcf2bcb1`](https://github.com/CompleTetech-Security/netscaler-cve-2026-88778-check/commit/a4a5123c137c09b48c599a98857a47a1bcf2bcb1) | [6 passed](https://github.com/CompleTetech-Security/netscaler-cve-2026-88778-check/actions/runs/40249059659) |
+| [node2shell-check](https://github.com/CompleTetech-Security/node2shell-check) | [`5bfd4caee620543889e11c4b6c3af7a0e57a1965`](https://github.com/CompleTetech-Security/node2shell-check/commit/5bfd4caee620543889e11c4b6c3af7a0e57a1965) | [12 passed](https://github.com/CompleTetech-Security/node2shell-check/actions/runs/40250130777) |
+| [oci-runtime-inventory](https://github.com/CompleTetech-Security/oci-runtime-inventory) | [`f04bc7a5729e26dc9c067b0d610e35cd51633435`](https://github.com/CompleTetech-Security/oci-runtime-inventory/commit/f04bc7a5729e26dc9c067b0d610e35cd51633435) | [6 passed](https://github.com/CompleTetech-Security/oci-runtime-inventory/actions/runs/40250072619) |
+| [scan-results-bridge](https://github.com/CompleTetech-Security/scan-results-bridge) | [`a9bd1b7af01d2cbde8c8923da9bd96021a3adab7`](https://github.com/CompleTetech-Security/scan-results-bridge/commit/a9bd1b7af01d2cbde8c8923da9bd96021a3adab7) | [6 passed](https://github.com/CompleTetech-Security/scan-results-bridge/actions/runs/40249851847) |
+| [sharp-rsvg-rce-check](https://github.com/CompleTetech-Security/sharp-rsvg-rce-check) | [`b4283ed0deb12e7b0568ff3c4b232f96935dfe4a`](https://github.com/CompleTetech-Security/sharp-rsvg-rce-check/commit/b4283ed0deb12e7b0568ff3c4b232f96935dfe4a) | [6 passed](https://github.com/CompleTetech-Security/sharp-rsvg-rce-check/actions/runs/40249169474) |
+| [simplegit-rce-check](https://github.com/CompleTetech-Security/simplegit-rce-check) | [`38d2ae97b73d00992c979ba92800434e3f4cb3bd`](https://github.com/CompleTetech-Security/simplegit-rce-check/commit/38d2ae97b73d00992c979ba92800434e3f4cb3bd) | [6 passed](https://github.com/CompleTetech-Security/simplegit-rce-check/actions/runs/40244875480) |
+| [sonicwall-sma1000-cve-2026-102255-check](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102255-check) | [`fb2c56c690f03b0cd35208a7a916944f1635f592`](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102255-check/commit/fb2c56c690f03b0cd35208a7a916944f1635f592) | [6 passed](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102255-check/actions/runs/40249098500) |
+| [sonicwall-sma1000-cve-2026-102256-check](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102256-check) | [`79b125a99fd8308c47703823543c2c462a4b5206`](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102256-check/commit/79b125a99fd8308c47703823543c2c462a4b5206) | [6 passed](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102256-check/actions/runs/40249054122) |
+| [sonicwall-sma1000-cve-2026-102257-check](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102257-check) | [`8e4d0af8dba5a7ff0bfa97c78ffe67cd8fa0bf31`](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102257-check/commit/8e4d0af8dba5a7ff0bfa97c78ffe67cd8fa0bf31) | [6 passed](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102257-check/actions/runs/40249048581) |
+| [sonicwall-sma1000-cve-2026-102258-check](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102258-check) | [`f511b0a2f507777084a1f3322ff07e16ee02a7cb`](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102258-check/commit/f511b0a2f507777084a1f3322ff07e16ee02a7cb) | [6 passed](https://github.com/CompleTetech-Security/sonicwall-sma1000-cve-2026-102258-check/actions/runs/40249043155) |
+| [vm2-nesting-check](https://github.com/CompleTetech-Security/vm2-nesting-check) | [`57c2448c32d82894d3ddd1af1b184436d97ddf3e`](https://github.com/CompleTetech-Security/vm2-nesting-check/commit/57c2448c32d82894d3ddd1af1b184436d97ddf3e) | [6 passed](https://github.com/CompleTetech-Security/vm2-nesting-check/actions/runs/40244871958) |
+
+## Initial audit: what was verified
 
 All 48 repositories visible in the `completetech-security` organization were
 inventoried through authenticated GitHub metadata. Each had a successful hosted
@@ -18,7 +119,7 @@ ran 53 with one skip; Flowise ran 65 with two skips. Those two family checkers
 were checked out separately at the commits listed below. Other family test
 suites were not rerun locally during this audit. Tests used synthetic inputs.
 
-## Original issue disposition
+## Initial audit: original issue disposition
 
 Completed implementation work is distinguished from the broader original scope.
 The issue bodies retain their historical requirements and dated delivery notes.
@@ -101,9 +202,9 @@ are repository build/test evidence only. No live targets were scanned.
 | [tinypool-options-rce-check](https://github.com/CompleTetech-Security/tinypool-options-rce-check) | [`9b603d37d15f259189a3df030a7d210366aec9b8`](https://github.com/CompleTetech-Security/tinypool-options-rce-check/commit/9b603d37d15f259189a3df030a7d210366aec9b8) | [passed](https://github.com/CompleTetech-Security/tinypool-options-rce-check/actions/runs/40111902229) |
 | [vm2-nesting-check](https://github.com/CompleTetech-Security/vm2-nesting-check) | [`575ea16f8763f27a6e58dd708f46fe26112ea701`](https://github.com/CompleTetech-Security/vm2-nesting-check/commit/575ea16f8763f27a6e58dd708f46fe26112ea701) | [passed](https://github.com/CompleTetech-Security/vm2-nesting-check/actions/runs/40111911270) |
 
-## Continuing delivery
+## Future delivery procedure
 
-Implement each missing parser in its exploit-specific destination, preserving
+Implement each future parser in its exploit-specific destination, preserving
 its existing result semantics, input bounds, standalone distribution and
 publication protections. Original issues remain the acceptance authority.
 Update the parent only after destination changes, meaningful synthetic tests,
