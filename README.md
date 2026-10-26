@@ -100,3 +100,7 @@ Dual licensed: [AGPL-3.0](LICENSE), including commercial use that meets its term
 
 An interruption after a complete report is published preserves that report and exits 130.
 CSV rejects NUL characters before writing a report.
+
+Optional family metadata tools: [Node capability and build-context collection](docs/NODE_METADATA.md).
+These separate formats do not change the Node2Shell inventory schema or infer
+application exposure from available APIs, lockfile declarations or image tags.
