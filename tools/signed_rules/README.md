@@ -100,3 +100,5 @@ invocation. Their count is added to the new-rotation budget so routine root
 rotations do not exhaust a lifetime limit. History is bounded to 4,096 regular
 root files and 64 MiB; reaching that operational cap requires a publisher-planned
 checkpoint/reprovisioning release, never bypassing verification or deleting cache.
+
+Targets must carry a signed SHA-256 digest as well as their signed length; hashless targets are rejected. No-force publication requires a filesystem supporting hard links and fails closed otherwise. Only direct optional dependencies are version-pinned; transitive dependencies resolve through pip, so release environments should separately lock and audit the complete resolved environment.

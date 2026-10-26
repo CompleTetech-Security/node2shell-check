@@ -151,6 +151,8 @@ def verify(bundle, root, state, output, target, force=False):
         info = updater.get_targetinfo(target)
         if info is None or info.length > MAX_BYTES:
             raise ValueError('Target missing or oversized')
+        if 'sha256' not in info.hashes:
+            raise ValueError('Target must have a signed SHA-256 digest')
         # Updater verifies target length/hash; temporary verified bytes never run.
         with tempfile.TemporaryDirectory(prefix='target-', dir=state) as directory:
             path = Path(directory) / 'verified.json'

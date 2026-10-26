@@ -9,6 +9,8 @@ import unittest
 from unittest.mock import patch
 
 from securesystemslib.signer import CryptoSigner
+from tuf.api.exceptions import RepositoryError, DownloadError
+from tuf.api.serialization import DeserializationError
 from tuf.api.metadata import Metadata, Root, Targets, Timestamp, Snapshot, TargetFile, MetaFile
 
 spec = importlib.util.spec_from_file_location('verify_bundle', Path(__file__).with_name('verify_bundle.py'))
@@ -37,11 +39,12 @@ class BundleTests(unittest.TestCase):
         self.data = b'{"schema_version":1,"synthetic":true}\n'
         self.publish()
 
-    def publish(self, version=1, expired=False, data=None):
+    def publish(self, version=1, expired=False, data=None, hashes=None):
         data = self.data if data is None else data
         expiry = datetime.now(timezone.utc) - timedelta(days=1) if expired else self.expires
         targets = Metadata(Targets(version=version, expires=expiry))
         info = TargetFile.from_data('rules.json', data)
+        if hashes is not None: info.hashes = hashes
         targets.signed.targets['rules.json'] = info
         targets.sign(self.keys['targets'])
         target_bytes = targets.to_bytes()
@@ -68,11 +71,21 @@ class BundleTests(unittest.TestCase):
         self.verify(force=True)
         self.assertFalse((self.state/'update.lock').exists())
 
+    def test_target_requires_sha256_even_when_signed_length_matches(self):
+        self.verify()
+        for version,hashes in [(2,{}),(3,{'sha512':hashlib.sha512(self.data).hexdigest()})]:
+            self.publish(version,hashes=hashes)
+            (self.bundle/'targets'/'rules.json').write_bytes(b'x'*len(self.data))
+            with self.assertRaises((DeserializationError,ValueError)):
+                self.verify(force=True)
+            self.assertEqual(self.data,self.output.read_bytes())
+            self.assertFalse((self.state/'update.lock').exists())
+
     def test_tampered_target_retains_previous_output(self):
         self.verify()
         self.publish(2, data=b'{"new":true}')
         for path in (self.bundle/'targets').iterdir(): path.write_bytes(b'broken')
-        with self.assertRaises(Exception): self.verify(force=True)
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify(force=True)
         self.assertEqual(self.data,self.output.read_bytes())
         self.assertFalse((self.state/'update.lock').exists())
 
@@ -84,16 +97,16 @@ class BundleTests(unittest.TestCase):
             md.signatures.clear()
             if not unsigned: md.sign(CryptoSigner.generate_ed25519())
             path.write_bytes(md.to_bytes())
-            with self.assertRaises(Exception): self.verify()
+            with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify()
             self.assertFalse(self.output.exists())
 
     def test_expired_and_rollback_rejected(self):
         self.publish(expired=True)
-        with self.assertRaises(Exception): self.verify()
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify()
         self.publish(2)
         self.verify()
         self.publish(1)
-        with self.assertRaises(Exception): self.verify(force=True)
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify(force=True)
         self.assertEqual(self.data,self.output.read_bytes())
 
     def test_dual_signed_root_rotation_and_revoked_release_key(self):
@@ -110,12 +123,7 @@ class BundleTests(unittest.TestCase):
         self.publish(2)
         self.verify(force=True)
         self.assertEqual(2,Metadata.from_bytes((self.state/'metadata'/'root.json').read_bytes()).signed.version)
-        path=self.bundle/'metadata'/'2.targets.json'
-        # Root rotation must not permit an untrusted targets signing key.
-        md=Metadata.from_bytes(path.read_bytes())
-        md.signatures.clear(); md.sign(CryptoSigner.generate_ed25519())
-        path.write_bytes(md.to_bytes())
-        # Re-sign the envelope descriptors so this exercises signature trust, not only hashes.
+        # Re-sign envelope descriptors so this exercises revoked-key trust.
         self.publish(3)
         path=self.bundle/'metadata'/'3.targets.json'
         md=Metadata.from_bytes(path.read_bytes()); md.signatures.clear(); md.sign(oldtargets)
@@ -126,7 +134,7 @@ class BundleTests(unittest.TestCase):
         stamp=Metadata.from_bytes((self.bundle/'metadata'/'timestamp.json').read_bytes())
         stamp.signed.snapshot_meta=MetaFile.from_data(3,raw,['sha256']);stamp.sign(self.keys['timestamp'])
         (self.bundle/'metadata'/'timestamp.json').write_bytes(stamp.to_bytes())
-        with self.assertRaises(Exception): self.verify(force=True)
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify(force=True)
 
     def test_untrusted_root_rotation_and_changed_bootstrap_rejected(self):
         self.verify()
@@ -134,7 +142,7 @@ class BundleTests(unittest.TestCase):
         for role,key in self.keys.items(): md.signed.add_key(key.public_key,role)
         md.sign(CryptoSigner.generate_ed25519())
         (self.bundle/'metadata'/'2.root.json').write_bytes(md.to_bytes())
-        with self.assertRaises(Exception): self.verify(force=True)
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify(force=True)
         self.rootfile.write_bytes(self.rootfile.read_bytes()+b' ')
         with self.assertRaises(ValueError): self.verify(force=True)
 
@@ -151,7 +159,7 @@ class BundleTests(unittest.TestCase):
         rotated.signed.version = 2
         rotated.sign(self.keys["root"])
         (self.bundle/"metadata"/"2.root.json").write_bytes(rotated.to_bytes())
-        with self.assertRaises(Exception): self.verify(force=True)
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify(force=True)
         rotated.sign(extra[1], append=True)
         (self.bundle/"metadata"/"2.root.json").write_bytes(rotated.to_bytes())
         self.verify(force=True)
@@ -184,6 +192,8 @@ class BundleTests(unittest.TestCase):
                 (self.bundle/"metadata"/(str(version)+".root.json")).write_bytes(md.to_bytes())
         roots(2,20)
         self.verify()
+        for version in range(2,21):
+            (self.bundle/"metadata"/(str(version)+".root.json")).unlink()
         roots(21,40)
         self.verify(force=True)
         md=Metadata.from_bytes((self.state/"metadata"/"root.json").read_bytes())
@@ -197,7 +207,7 @@ class BundleTests(unittest.TestCase):
         path=self.bundle/"metadata"/"timestamp.json"
         md=Metadata.from_bytes(path.read_bytes());md.signed.version=3;md.sign(self.keys["timestamp"])
         path.write_bytes(md.to_bytes())
-        with self.assertRaises(Exception): self.verify(force=True)
+        with self.assertRaises((RepositoryError,DownloadError,ValueError,OSError)): self.verify(force=True)
         self.publish(4,data=b"not JSON")
         with self.assertRaises(ValueError): self.verify(force=True)
         self.assertEqual(self.data,self.output.read_bytes())
