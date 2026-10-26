@@ -1,0 +1,50 @@
+name: Publish authenticated rule snapshot
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-rules
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'CompleTetech-Security/node2shell-check' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Validate the trusted checkout
+        run: python -m unittest -v
+      - name: Build the existing embedded snapshot
+        run: |
+          mkdir dist
+          test "$GITHUB_RUN_ATTEMPT" -lt 1000
+          python tools/signed_rules/keyless_rules.py build --sequence "$((GITHUB_RUN_NUMBER * 1000 + GITHUB_RUN_ATTEMPT))" --commit "$GITHUB_SHA" --output dist/node2shell-rules.json
+      - name: Attest the exact publication bytes
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: dist/node2shell-rules.json
+      - name: Publish immutable-named release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          cp "$BUNDLE_PATH" dist/node2shell-rules.sigstore.json
+          gh release create "rules-v1-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}" --target "$GITHUB_SHA" --title "Authenticated Node2Shell rules ${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" --notes "Existing embedded snapshot, keylessly signed by the pinned main-branch publishing workflow. Verify publisher identity, expiry and durable sequence state before use. No automatic checker update or safety attestation." --latest=false dist/node2shell-rules.json dist/node2shell-rules.sigstore.json
