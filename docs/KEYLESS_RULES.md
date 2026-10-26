@@ -44,6 +44,9 @@ embedded snapshot, attests those exact bytes and creates a new release with
 unrelated software release is marked latest. There is no recurring schedule.
 Each dispatch is a release decision. Review advisory provenance and methodology
 before changing thresholds; republishing does not change the embedded rule date.
+The job checks the live `main` head before building and again before publication;
+stale reruns fail. Repository write permission authorizes dispatch; no additional
+human approval or protected environment is asserted by this policy.
 
 Envelopes expire after 30 days. Sequence is `RUN_NUMBER * 1000 + ATTEMPT`, with
 attempts below 1,000. Rerunning an old run cannot outrank a newer run. Preserve

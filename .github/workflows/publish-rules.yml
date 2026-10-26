@@ -33,6 +33,7 @@ jobs:
         run: python -m unittest -v
       - name: Build the existing embedded snapshot
         run: |
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA"
           mkdir dist
           test "$GITHUB_RUN_ATTEMPT" -lt 1000
           python tools/signed_rules/keyless_rules.py build --sequence "$((GITHUB_RUN_NUMBER * 1000 + GITHUB_RUN_ATTEMPT))" --commit "$GITHUB_SHA" --output dist/node2shell-rules.json
@@ -46,5 +47,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
         run: |
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA"
           cp "$BUNDLE_PATH" dist/node2shell-rules.sigstore.json
           gh release create "rules-v1-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}" --target "$GITHUB_SHA" --title "Authenticated Node2Shell rules ${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" --notes "Existing embedded snapshot, keylessly signed by the pinned main-branch publishing workflow. Verify publisher identity, expiry and durable sequence state before use. No automatic checker update or safety attestation." --latest=false dist/node2shell-rules.json dist/node2shell-rules.sigstore.json

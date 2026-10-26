@@ -106,7 +106,7 @@ class KeylessTests(unittest.TestCase):
     def test_failed_output_fences_rollback_and_allows_verified_retry(self):
         real_atomic = k.atomic
         def failure(path, data, replace=False):
-            if path == self.output: raise OSError("output unavailable")
+            if path.resolve() == self.output.resolve(): raise OSError("output unavailable")
             return real_atomic(path, data, replace)
         with patch.object(k, "atomic", side_effect=failure):
             with self.assertRaises(OSError): self.verify()
