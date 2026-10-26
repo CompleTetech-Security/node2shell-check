@@ -60,7 +60,7 @@ def inspect(path):
             children=entry.get('dependencies',{})
             if not isinstance(children,dict):raise ValueError('Invalid dependency tree')
             for name,child in children.items():
-                if not isinstance(name,str) or not re.fullmatch(r'(?:@[A-Za-z0-9_.-]+/)?[A-Za-z0-9_.-]+',name):raise ValueError('Invalid dependency name')
+                if not isinstance(name,str) or not re.fullmatch(r'(?:@[A-Za-z0-9_.-]+/)?[A-Za-z0-9_.-]+',name) or any(part in ('.','..') for part in name.split('/')):raise ValueError('Invalid dependency name')
                 pending.append((child,location+'/node_modules/'+name if location else 'node_modules/'+name,depth+1))
     return dict(schema_version='node-build-context/1',complete=True,exploitability='not_tested',runtime_version='',
                 observations=sorted(rows,key=lambda row:(row['package_path'],row['declared_node_range'])),

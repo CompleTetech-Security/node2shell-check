@@ -27,6 +27,9 @@ class BuildContextTests(unittest.TestCase):
             for text in ('{"engines":{},"engines":{}}','{"lockfileVersion":true}','{"lockfileVersion":3,"packages":{"../outside":{}}}','{"engines":[]}'):
                 path.write_text(text,encoding='utf-8')
                 with self.assertRaises(ValueError):c.inspect(path)
+            for name in ('.','..','@scope/.','@scope/..'):
+                path.write_text(json.dumps(dict(lockfileVersion=1,dependencies={name:dict(engines=dict(node='>=22'))})),encoding='utf-8')
+                with self.assertRaises(ValueError):c.inspect(path)
             path.write_text('{}',encoding='utf-8');self.assertEqual([],c.inspect(path)['observations'])
             path.write_bytes(b' '*(4*1024**2+1))
             with self.assertRaises(ValueError):c.inspect(path)
