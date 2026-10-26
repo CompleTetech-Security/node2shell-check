@@ -42,6 +42,7 @@ jobs:
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
           subject-path: dist/node2shell-rules.json
+          create-storage-record: false
       - name: Publish immutable-named release assets
         env:
           GH_TOKEN: ${{ github.token }}
