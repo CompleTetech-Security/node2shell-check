@@ -156,6 +156,15 @@ class BundleTests(unittest.TestCase):
         (self.bundle/"metadata"/"2.root.json").write_bytes(rotated.to_bytes())
         self.verify(force=True)
 
+    def test_authenticated_but_ambiguous_target_encodings_and_keys_reject(self):
+        self.verify()
+        for version,raw in enumerate((b'{"x":1,"x":2}',b'\xef\xbb\xbf{}','{}'.encode('utf-16'),b'{"x":1e999}'),start=2):
+            self.publish(version,data=raw)
+            with self.assertRaises(ValueError): self.verify(force=True)
+            self.assertEqual(self.data,self.output.read_bytes())
+        localroot=self.bundle/"root.json";localroot.write_bytes(self.rootfile.read_bytes())
+        with self.assertRaises(ValueError):v.verify(self.bundle,localroot,self.state,self.output,"rules.json",True)
+
     def test_cached_history_does_not_consume_new_rotation_budget(self):
         def roots(first, last):
             for version in range(first,last+1):

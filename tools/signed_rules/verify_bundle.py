@@ -6,6 +6,7 @@ import argparse
 from contextlib import contextmanager
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -39,6 +40,20 @@ def atomic_write(path, data, *, replace=False):
             os.link(name, path)
     finally:
         Path(name).unlink(missing_ok=True)
+
+
+def unique_object(pairs):
+    result={}
+    for key,value in pairs:
+        if key in result: raise ValueError('Duplicate target JSON key')
+        result[key]=value
+    return result
+
+
+def finite_float(text):
+    value=float(text)
+    if not math.isfinite(value):raise ValueError('Non-finite target number')
+    return value
 
 
 @contextmanager
@@ -85,7 +100,7 @@ def verify(bundle, root, state, output, target, force=False):
         raise ValueError('Bundle and output parent must already exist')
     if output == root or output.is_relative_to(bundle) or output.is_relative_to(state):
         raise ValueError('Output must be separate from trust root, bundle and state')
-    if state.is_relative_to(bundle) or bundle.is_relative_to(state) or root.is_relative_to(state):
+    if state.is_relative_to(bundle) or bundle.is_relative_to(state) or root.is_relative_to(state) or root.is_relative_to(bundle):
         raise ValueError('State, bundle and pinned root must be separate')
     if output.exists() and (not force or os.path.samefile(output, root)):
         raise ValueError('Output exists or aliases pinned root; choose another output')
@@ -142,7 +157,7 @@ def verify(bundle, root, state, output, target, force=False):
             updater.download_target(info, str(path), BASE + 'targets/')
             data = read_bounded(path)
             try:
-                value = json.loads(data, parse_constant=lambda _: (_ for _ in ()).throw(ValueError("Non-finite JSON")))
+                value = json.loads(data.decode("utf-8"), object_pairs_hook=unique_object, parse_float=finite_float, parse_constant=lambda _: (_ for _ in ()).throw(ValueError("Non-finite JSON")))
             except (ValueError, RecursionError) as exc:
                 raise ValueError('Verified target is not bounded JSON') from exc
             if not isinstance(value, dict):

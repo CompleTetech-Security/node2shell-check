@@ -42,7 +42,9 @@ On Windows use `.venv-tuf\Scripts\python.exe`. The output parent and bundle must
 already exist. A bundle has flat `metadata/` and `targets/` directories containing
 standard TUF versioned metadata and hash-prefixed target files. Delegations are
 not supported. The public root is a separate, explicitly pinned input.
-Target names must be flat JSON filenames, and targets must decode to JSON objects.
+Target names must be flat JSON filenames; target bytes must be UTF-8 without a
+BOM and decode to JSON objects with unique keys and finite numeric values. The
+public trust root must be located separately from the supplied bundle.
 No claims about a universal advisory schema are made: the subsequent reviewer
 must validate the target against its particular checker's schema and primary
 sources. A signed arbitrary JSON object is not an accepted detection rule.
