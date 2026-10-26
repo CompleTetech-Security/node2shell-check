@@ -123,6 +123,10 @@ class KeylessTests(unittest.TestCase):
             def run(command, **kwargs):
                 self.assertIn("--custom-trusted-root", command)
                 self.assertIn("--bundle", command)
+                # gh makes these four policy flags mutually exclusive. Exact
+                # certificate identity includes the workflow path AND main ref.
+                identity_flags = {"--cert-identity", "--cert-identity-regex", "--signer-repo", "--signer-workflow"}
+                self.assertEqual({"--cert-identity"}, set(command) & identity_flags)
                 for expected in (k.IDENTITY, k.ISSUER, "--deny-self-hosted-runners", "--source-digest", "--signer-digest", "refs/heads/main"):
                     self.assertIn(expected, command)
                 self.assertNotIn("shell", kwargs)

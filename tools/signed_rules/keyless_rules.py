@@ -116,7 +116,7 @@ def verify_provenance(artifact, bundle, root, commit):
         raise ValueError("Install a trusted GitHub CLI with attestation support")
     command = [gh, "attestation", "verify", str(artifact), "--repo", REPOSITORY,
                "--bundle", str(bundle), "--custom-trusted-root", str(root),
-               "--signer-workflow", WORKFLOW, "--cert-identity", IDENTITY,
+               "--cert-identity", IDENTITY,
                "--cert-oidc-issuer", ISSUER, "--source-ref", "refs/heads/main",
                "--source-digest", commit, "--signer-digest", commit,
                "--deny-self-hosted-runners", "--hostname", "github.com", "--format", "json"]
