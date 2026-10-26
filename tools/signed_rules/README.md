@@ -10,14 +10,18 @@ The checker remains one file with no third-party dependencies.
 
 ## Trust recommendation and provisioning
 
-CompleteTech should provision an offline Ed25519 root with a 2-of-3 threshold,
+The project publication channel adopts [keyless GitHub/Sigstore trust](../../docs/KEYLESS_RULES.md)
+with pinned repository/workflow identity. The following TUF custody model is an
+alternative for operators requiring an independently administered offline root.
+
+Such operators should provision an offline Ed25519 root with a 2-of-3 threshold,
 held by independent custodians, and separate targets, snapshot and timestamp
 roles. Keep routine release keys separate from root custody. Production private
 keys must never enter this repository, CI artifacts, reports, or support logs.
 Ship the **public** root through an independently authenticated release channel
 and record its SHA-256 in the release receipt. Do not trust a root merely because
-it arrived beside an update. No production root, private key or automatic feed
-is configured here. Tests generate ephemeral synthetic keys in memory.
+it arrived beside an update. No operator-managed TUF root or private key is
+configured here. TUF tests generate ephemeral synthetic keys in memory.
 
 Root replacement must satisfy both old and new root thresholds; rotate release
 keys through authorized root metadata. A root compromise requires an independent
@@ -91,9 +95,9 @@ versions. Failed updates leave the last released embedded rules available offlin
 
 Tests cover real Ed25519 signatures, tampering, expiry, rollback, threshold-bound
 root rotation, untrusted root/release keys, protected outputs and lock ownership.
-They use synthetic data and prohibit socket creation. Production trust provisioning
-and an authenticated hosted feed are operational work, not claimed delivered by
-these fixtures.
+They use synthetic data and prohibit socket creation. They do not demonstrate
+operator-managed TUF production custody. Keyless publication has separate
+identity, expiry and rollback checks and requires an actual attested release.
 
 Cached roots are replayed cryptographically from the original bootstrap on every
 invocation. Their count is added to the new-rotation budget so routine root

@@ -105,6 +105,11 @@ Optional release tooling: [offline TUF bundle verification](tools/signed_rules/R
 uses separate optional dependencies and an explicitly provisioned public trust root.
 It never changes the standalone checker or automatically applies a rule update.
 
+The optional [authenticated rule-publication channel](docs/KEYLESS_RULES.md)
+uses pinned GitHub/Sigstore publisher identity, expiring artifacts and durable
+rollback checks. Updates produce a separate review artifact; the checker keeps
+its embedded offline snapshot.
+
 Optional family metadata tools: [Node capability and build-context collection](docs/NODE_METADATA.md).
 These separate formats do not change the Node2Shell inventory schema or infer
 application exposure from available APIs, lockfile declarations or image tags.
