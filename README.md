@@ -104,3 +104,7 @@ CSV rejects NUL characters before writing a report.
 Optional release tooling: [offline TUF bundle verification](tools/signed_rules/README.md)
 uses separate optional dependencies and an explicitly provisioned public trust root.
 It never changes the standalone checker or automatically applies a rule update.
+
+Optional family metadata tools: [Node capability and build-context collection](docs/NODE_METADATA.md).
+These separate formats do not change the Node2Shell inventory schema or infer
+application exposure from available APIs, lockfile declarations or image tags.
