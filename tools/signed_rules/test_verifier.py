@@ -165,6 +165,16 @@ class BundleTests(unittest.TestCase):
         localroot=self.bundle/"root.json";localroot.write_bytes(self.rootfile.read_bytes())
         with self.assertRaises(ValueError):v.verify(self.bundle,localroot,self.state,self.output,"rules.json",True)
 
+    def test_exact_new_rotation_limit_excludes_bootstrap_history_entry(self):
+        self.verify()
+        for version in range(2,35):
+            md=Metadata.from_bytes(self.root.to_bytes());md.signed.version=version;md.sign(self.keys["root"])
+            (self.bundle/"metadata"/(str(version)+".root.json")).write_bytes(md.to_bytes())
+        self.verify(force=True)
+        self.assertEqual(33,Metadata.from_bytes((self.state/"metadata"/"root.json").read_bytes()).signed.version)
+        self.verify(force=True)
+        self.assertEqual(34,Metadata.from_bytes((self.state/"metadata"/"root.json").read_bytes()).signed.version)
+
     def test_cached_history_does_not_consume_new_rotation_budget(self):
         def roots(first, last):
             for version in range(first,last+1):
