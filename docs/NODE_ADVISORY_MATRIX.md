@@ -39,7 +39,7 @@ production deployment was assessed for this matrix.
 | [CVE-2026-58044](https://github.com/CompleTetech-Security/node-cve-2026-58044-check) | 22: 22.23.2; 24: 24.18.1; 26: 26.5.1 | [Snapshot](https://github.com/CompleTetech-Security/node-cve-2026-58044-check/blob/d521869fae5911599a7217c21ad50cc118420a5a/advisory.json), verified 2026-10-24 |
 | [CVE-2026-58045](https://github.com/CompleTetech-Security/node-cve-2026-58045-check) | 22: 22.23.2; 24: 24.18.1; 26: 26.5.1 | [Snapshot](https://github.com/CompleTetech-Security/node-cve-2026-58045-check/blob/868a65209fa439176cc790c7b9f18c370bda9ce4/advisory.json), verified 2026-10-24 |
 
-## Evidence collection still differs from advisory coverage
+## Evidence collection and its limits
 
 A repository for every named CVE establishes implementation mapping, not the
 whole original scope of [issue #4](https://github.com/completetech-security/node2shell-check/issues/4).
@@ -49,12 +49,13 @@ configuration, Permission Model policy, resolver behavior, TLS identity handling
 startup-snapshot construction or SEA deployment. A static capability does not
 prove an advisory precondition, nor does its absence clear an old version.
 
-Keep #4 open for the original runtime/build feature collector and
-lockfile/container evidence requirements. Collector output must avoid app imports,
+The runtime/build feature collector and npm declaration context are delivered
+in [PR #22](https://github.com/CompleTetech-Security/node2shell-check/pull/22).
+Collector output avoids app imports,
 environment variables, hostnames, arguments, credentials and application data.
 No matching source or inventory record can prove absence. Container metadata
-support is also tracked by optional [#12](https://github.com/completetech-security/node2shell-check/issues/12),
-which must not become a mandatory runtime dependency of these standalone tools.
+support is delivered by optional [OCI PR #1](https://github.com/CompleTetech-Security/oci-runtime-inventory/pull/1).
+Neither support tool is a mandatory runtime dependency of these standalone tools.
 
 The embedded snapshots preserve important exclusions: not every listed CVE
 covers every active major. In particular, do not add a missing major to a
@@ -63,6 +64,6 @@ or classify custom/prerelease/future builds as verified safe. Local
 exploitability remains `not_tested`, independently of external exploitation
 reports and lifecycle upgrade guidance.
 
-Capability and npm build-context work is now proposed in [PR #22](https://github.com/CompleTetech-Security/node2shell-check/pull/22),
-with independent container metadata in [OCI PR #1](https://github.com/CompleTetech-Security/oci-runtime-inventory/pull/1).
-These remain under review; the matrix itself does not attest those changes as merged.
+Both supporting PRs are merged with passing hosted checks on their actual
+merge commits. [Delivery receipts](CHECKER_STATUS.md#actual-merge-commit-ci-receipts)
+pin those commits and distinguish build/test evidence from runtime attestation.
