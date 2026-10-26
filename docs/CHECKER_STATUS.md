@@ -4,7 +4,52 @@ Audit date: **2026-10-25**. This is a delivery snapshot, not an assessment of an
 runtime, customer, website or production deployment. Recheck GitHub before using
 these commits as current-state evidence.
 
-## Continued delivery after the initial audit
+## Final roadmap completion and production trust
+
+Updated **2026-10-26 UTC**. This section supersedes the remaining-work statements
+in the earlier delivery snapshots below. The original twelve-issue campaign is
+implemented, and the subsequent CSV provenance audit #25 is addressed.
+
+- [PR #24](https://github.com/CompleTetech-Security/node2shell-check/pull/24)
+  provisions explicit GitHub OIDC/Sigstore publication, expiring envelopes and
+  durable sequence/clock checks. [PR #26](https://github.com/CompleTetech-Security/node2shell-check/pull/26)
+  fixes a real CLI flag incompatibility and adds verification before publication.
+  The [production trust/recovery policy](KEYLESS_RULES.md) pins the company's
+  numeric repository/owner IDs and exact main workflow, using independent
+  Sigstore roots. This adopts existing repository-admin authority. It does not
+  claim separately provisioned 2-of-3 offline custodians; operator-managed TUF
+  remains an alternative.
+- Real releases 1001, 2001, 3001 and 4001 were independently authenticated. After 2001
+  was accepted, authentic 1001 failed rollback checks. Tampered bytes, wrong
+  numeric publisher and an authentic artifact at expiry were rejected without
+  changing accepted output/state. [Release 4001](https://github.com/CompleTetech-Security/node2shell-check/releases/tag/rules-v1-4-1)
+  was published by the updated self-verifying workflow; its
+  [publisher run passed](https://github.com/CompleTetech-Security/node2shell-check/actions/runs/40252915441).
+  Source commit: `ad1ac3bfea1c90cdb022c9543c1ebb7596c56675`.
+  Artifact SHA-256: `0914a3272186874721119c58aed01a441b2a1f447aced867d5bdbd861931a1f1`.
+- [PR #27](https://github.com/CompleTetech-Security/node2shell-check/pull/27)
+  addresses #25 with report schema 1.1: all formats carry exact executable
+  identity and completeness; empty CSV reports carry an explicit summary.
+  Existing observation columns, timestamps, rule dates and inventory schema
+  are preserved. The classifier version stays 1.0.0 for the released converter's
+  named-profile compatibility; retain original reports for top-level provenance
+  that the older converter does not project. Actual conversion was verified.
+- Final local validation runs 78 stdlib tests and 13 optional TUF tests. Copilot
+  reviewed the substantive trust feature and its stale-run remediation. Its
+  monthly quota then exhausted; the CLI compatibility and CSV follow-ups received
+  manual review, real-release probes where applicable and cross-platform CI.
+  No Copilot review is claimed for those follow-ups. Each PR records exact-head
+  checks, and issue completion receipts record actual merge-commit checks.
+
+Published envelopes expire after 30 days; further publication is an explicit
+maintainer decision, with no new recurring schedule. Signature verification
+never installs rules automatically or establishes advisory accuracy, runtime
+patches or exploitability. Existing embedded rules remain usable offline.
+Production publication/verification is distinct from a production target scan;
+no targets were scanned. Current issue states and newest build receipts should
+always be read back from GitHub rather than inferred from historical tables.
+
+## Earlier delivery snapshot after the initial audit
 
 Delivery receipt updated **2026-10-26 UTC** (October 25 in America/New_York).
 The initial 48-repository audit below is historical. Its missing-adapter and
