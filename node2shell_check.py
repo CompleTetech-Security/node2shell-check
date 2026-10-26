@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import base64
 import csv
+import hashlib
 import io
 import html
 import json
@@ -28,6 +29,10 @@ from urllib.parse import quote, urljoin, urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 TOOL_VERSION = "1.0.0"
+REPORT_SCHEMA_VERSION = "1.1"
+# Capture the distributed executable's byte identity at module load, before a
+# later report could accidentally identify a changed on-disk file instead.
+TOOL_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 BOT = "Node2ShellChecker"
 REDIRECTS = {301, 302, 303, 307, 308}
 MAX_BODY = 2 * 1024 * 1024
@@ -747,11 +752,19 @@ def logo_data_uri(path) -> str:
     return f"data:{mime};base64,{base64.b64encode(data).decode('ascii')}"
 
 
-def render_html(rows, *, logo=DEFAULT_LOGO, brand="CompleteTech LLC", generated_at=None, complete=True) -> str:
+def report_metadata(complete, generated_at=None):
+    return {"tool": "node2shell-check", "tool_version": TOOL_VERSION,
+            "tool_sha256": TOOL_SHA256, "report_schema_version": REPORT_SCHEMA_VERSION,
+            "generated_at": generated_at or datetime.now(timezone.utc).isoformat(),
+            "complete": complete}
+
+
+def render_html(rows, *, logo=DEFAULT_LOGO, brand="CompleteTech LLC", generated_at=None, complete=True, metadata=None) -> str:
     def esc(value):
         return html.escape("" if value is None else str(value), quote=True)
 
-    generated_at = generated_at or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    metadata = metadata or report_metadata(complete, generated_at)
+    generated_at = metadata["generated_at"]
     rows = sorted(rows, key=lambda row: STATUS_ORDER.get(row.get("node2shell_status"), 2))
     counts = {key: sum(row.get("node2shell_status") == key for row in rows) for key in STATUS_ORDER}
     tiles = [("", len(rows), "Inputs assessed"), ("bad", counts["potentially_affected"], "Potentially affected"),
@@ -771,7 +784,7 @@ def render_html(rows, *, logo=DEFAULT_LOGO, brand="CompleteTech LLC", generated_
             f"<td>{esc(row.get('source'))}<br>{esc(row.get('status'))}</td>"
             f"<td>{esc(row.get('http_status') if row.get('http_status') is not None else row.get('fetch_status', '—'))}</td>"
             f"<td class='notes'><p>{esc(row.get('node2shell_recommendation'))}</p>"
-            f"<details><summary>Evidence and limitations</summary><ul>{detail_html}</ul></details></td></tr>"
+            f"<details><summary>Evidence and limitations</summary><p>Observed: {esc(row.get('checked_at'))}</p><ul>{detail_html}</ul></details></td></tr>"
         )
     fixes = "".join(f"<tr><td>{major}.x</td><td><code>{'.'.join(map(str, version))}</code></td></tr>" for major, version in NODE2SHELL_FIXES.items())
     logo_uri = logo_data_uri(logo)
@@ -800,24 +813,29 @@ Unknown results need investigation. Framework hints and Brotli response compress
 then collect metadata again. An updated package lock or a patched workstation does not update a running server.</p>
 <p>Review incoming Brotli request parsers, responses fetched from untrusted services, and direct Brotli decompression calls.
 Vendor and custom builds require vendor evidence. The Brotli version string alone cannot establish patch status because fixes may be backported.</p>
-<footer>{esc(brand)} · node2shell-check {TOOL_VERSION} · {sources}</footer>
+<footer>{esc(brand)} · node2shell-check {TOOL_VERSION} · report schema {REPORT_SCHEMA_VERSION}<br>
+Executable SHA-256: <code>{esc(metadata['tool_sha256'])}</code> · Report complete: {str(complete).lower()}<br>{sources}</footer>
 </main></body></html>
 """
 
 
 def write_report(output, rows, *, format="csv", logo=DEFAULT_LOGO, brand="CompleteTech LLC", complete=True):
+    metadata = report_metadata(complete)
     if format == "csv":
-        writer = csv.DictWriter(output, fieldnames=list(Result.__dataclass_fields__))
+        writer = csv.DictWriter(output, fieldnames=[*Result.__dataclass_fields__, *metadata, "record_type"])
         writer.writeheader()
+        csv_metadata = {**metadata, "complete": str(complete).lower()}
         for row in rows:
-            writer.writerow({key: csv_safe(value) for key, value in row.items()})
+            writer.writerow({key: csv_safe(value) for key, value in {**row, **csv_metadata, "record_type": "result"}.items()})
+        if not rows:
+            writer.writerow({**csv_metadata, "record_type": "summary", "node2shell_rules_as_of": NODE2SHELL_RULES_DATE,
+                             "node2shell_exploitability": "not_tested"})
     elif format == "json":
-        json.dump({"tool": "node2shell-check", "tool_version": TOOL_VERSION, "rules_as_of": NODE2SHELL_RULES_DATE,
-                   "generated_at": datetime.now(timezone.utc).isoformat(), "complete": complete, "results": rows},
+        json.dump({**metadata, "rules_as_of": NODE2SHELL_RULES_DATE, "results": rows},
                   output, ensure_ascii=False, indent=2)
         output.write("\n")
     else:
-        output.write(render_html(rows, logo=logo, brand=brand, complete=complete))
+        output.write(render_html(rows, logo=logo, brand=brand, complete=complete, metadata=metadata))
 
 
 def save_report(path, rows, *, force=False, **options):
