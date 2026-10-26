@@ -133,6 +133,19 @@ fields. Array values are represented as readable text. Strings that could become
 spreadsheet formulas are prefixed with an apostrophe. Progress and diagnostic
 messages go to stderr, leaving stdout available for data.
 
+Report schema `1.1` preserves every existing result-column position
+and appends `tool`, `tool_version`, `tool_sha256`, `report_schema_version`,
+`generated_at`, `complete`, and `record_type`. `complete` is lowercase `true` or
+`false`; `record_type=result` identifies an observation. Empty runs have one
+`record_type=summary` row carrying build identity, rule date, completeness and
+`not_tested`, with no fabricated target. Consumers must distinguish summaries
+from observations. An interrupted zero-result CSV is therefore self-describing.
+The classifier's `tool_version` remains `1.0.0` for existing named-adapter
+compatibility; the additive report schema and exact executable digest identify
+this changed export. Existing bridge profile `node2shell-v1` still accepts its
+JSON; retain the original report for the new top-level provenance fields, which
+that older converter does not project. Classification thresholds are unchanged.
+
 ### JSON
 
 JSON is an object with these top-level fields:
@@ -141,6 +154,8 @@ JSON is an object with these top-level fields:
 | --- | --- |
 | `tool` | Checker name. |
 | `tool_version` | Checker version used for the run. |
+| `tool_sha256` | SHA-256 of this standalone executable's exact bytes, captured at startup. Not a publisher signature. |
+| `report_schema_version` | Additive output contract, currently `1.1`; inventory schema remains `1`. |
 | `rules_as_of` | Date of the embedded assessment rules. |
 | `generated_at` | Report generation timestamp. |
 | `complete` | Whether all requested observations completed. Inspect individual operational outcomes as well. |
@@ -157,7 +172,10 @@ does not update its rules.
 
 HTML is a single offline report with an embedded local logo, summary counts,
 assessment details, remediation guidance, fixed-version thresholds, source links,
-and run-completeness information. It supports dark/light themes and printing.
+and run-completeness information. Its footer identifies the tool version, report
+schema and executable SHA-256 even for empty reports. Observation `checked_at`,
+report `generated_at`, and rules verification date retain distinct meanings.
+It supports dark/light themes and printing.
 Dynamic text is escaped; the document contains no scripts or remotely loaded
 assets. The checked website URLs are evidence, not resources fetched by the
 report.
@@ -176,8 +194,8 @@ files cannot be used as the output destination, including with `--force`.
 The checker writes the report after the input loop or a handled keyboard
 interruption. Abrupt termination, process crashes, or power loss before that
 point can prevent report creation. It does not implement incremental checkpoints
-or automatic resume. CSV does not have a run-completeness envelope; retain the
-exit status/stderr or use JSON/HTML when that distinction matters.
+or automatic resume. CSV now carries run completeness on every result or empty
+summary row; retain the exit status/stderr as separate operational evidence.
 
 ## Requests made in website mode
 

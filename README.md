@@ -100,6 +100,9 @@ Dual licensed: [AGPL-3.0](LICENSE), including commercial use that meets its term
 
 An interruption after a complete report is published preserves that report and exits 130.
 CSV rejects NUL characters before writing a report.
+Report schema `1.1` records the executable SHA-256 and explicit
+run completeness in JSON, CSV and HTML. Empty CSV reports contain a summary row;
+existing observation columns and inventory schema `1` remain compatible.
 
 Optional release tooling: [offline TUF bundle verification](tools/signed_rules/README.md)
 uses separate optional dependencies and an explicitly provisioned public trust root.
